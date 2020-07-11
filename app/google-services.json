@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "758319129575",
+    "firebase_url": "https://faq-apps-152bc.firebaseio.com",
+    "project_id": "faq-apps-152bc",
+    "storage_bucket": "faq-apps-152bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758319129575:android:9a1e73c3bf47d47ad15342",
+        "android_client_info": {
+          "package_name": "com.dandi.faq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758319129575-fn20m9k21fup8scq8gpos5fvevtnkt10.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dandi.faq",
+            "certificate_hash": "031b018233df45ae60708661aba0f0dc04bcd654"
+          }
+        },
+        {
+          "client_id": "758319129575-t6188nnpi1ou690bmj7vcrvj7ch3skck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDijJpOGfmyTrt4_Kde7WtKEMQdC_3mCsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758319129575-t6188nnpi1ou690bmj7vcrvj7ch3skck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

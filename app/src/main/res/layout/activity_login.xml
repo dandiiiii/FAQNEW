@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_et_login"
+                android:drawableLeft="@drawable/ic_baseline_call_24"
+                android:id="@+id/etNotelp"
+                android:layout_width="match_parent"
+                android:hint="No Telepon"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        <Button
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_bt_login"
+            android:id="@+id/btLogin"
+            android:textColor="@color/putih"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login" />
+    </LinearLayout>
+</RelativeLayout>
