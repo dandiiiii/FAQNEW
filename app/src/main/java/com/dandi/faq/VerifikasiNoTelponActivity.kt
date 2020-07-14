@@ -107,19 +107,20 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
 
     private fun login(credential: PhoneAuthCredential) {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(
-            this, {
-                if (it.isSuccessful) {
-                    getToken()
-                    pushFirebase(it.result!!.user!!.uid)
-                    SharedPrefUtil.saveBoolean("login", true)
-                    SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(applicationContext, "Kode Salah", Toast.LENGTH_SHORT).show()
-                }
+            this
+        ) {
+            if (it.isSuccessful) {
+                getToken()
+                pushFirebase(it.result!!.user!!.uid)
+                SharedPrefUtil.saveBoolean("login", true)
+                SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
+                SharedPrefUtil.saveString("noTelp", intent.getStringExtra("noTelp")!!)
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                Toast.makeText(applicationContext, "Kode Salah", Toast.LENGTH_SHORT).show()
             }
-        )
+        }
     }
 
     private fun pushFirebase(uid: String) {
@@ -127,14 +128,14 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
         userFirebase.nama = "Dandi"
         userFirebase.noTelp = this.intent.getStringExtra("noTelp")!!
         userFirebase.uid = uid
-        FirebaseDatabase.getInstance().reference.child("User/${this.intent.getStringExtra("nip")}")
+        FirebaseDatabase.getInstance().reference.child("User/${this.intent.getStringExtra("noTelp")}")
             .setValue(userFirebase)
     }
 
     fun pushToken() {
         val map = HashMap<String, Any>()
         map.put("token", SharedPrefUtil.getString("token")!!)
-        FirebaseDatabase.getInstance().reference.child("Tokens/${this.intent.getStringExtra("nip")}")
+        FirebaseDatabase.getInstance().reference.child("Tokens/${this.intent.getStringExtra("noTelp")}")
             .updateChildren(map)
     }
 

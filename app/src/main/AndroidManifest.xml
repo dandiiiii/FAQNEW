@@ -3,6 +3,7 @@
     package="com.dandi.faq">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.example.faq.sharepreference.App"
         android:allowBackup="true"
@@ -12,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".AddFAQActivity"></activity>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/NoBar">
