@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.dandi.faq.R
+import com.example.faq.sharepreference.SharedPrefUtil
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -11,9 +12,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         btLogin.setOnClickListener {
+            SharedPrefUtil.saveBoolean("admin",false)
             val intent = Intent(this, VerifikasiNoTelponActivity::class.java)
             intent.putExtra("noTelp", etNotelp.text.toString())
             startActivity(intent)
+        }
+        tvLoginAdmin.setOnClickListener {
+            startActivity(Intent(this, LoginAdminActivity::class.java))
         }
     }
 }

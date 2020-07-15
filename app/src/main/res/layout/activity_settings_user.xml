@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SettingsUser">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/fotoPPUser"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/cardForm"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_launcher_background" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNamaSetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:drawableLeft="@drawable/ic_baseline_account_circle_24"
+                android:hint="Nama"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/btDoneSetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_bt_login"
+                android:text="Selesai"
+                android:textColor="@color/putih" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btUploadFotoSetting"
+        android:src="@drawable/ic_baseline_camera_alt_24"
+        android:layout_above="@id/cardForm"
+        android:layout_toRightOf="@id/fotoPPUser"
+        android:layout_marginLeft="-50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>
