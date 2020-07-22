@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+
     <application
         android:name="com.example.faq.sharepreference.App"
         android:allowBackup="true"
@@ -15,8 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".GrapicActivity" />
         <activity android:name=".MainAdminActivity" />
-        <activity android:name=".SettingsUser"></activity>
+        <activity android:name=".SettingsUser" />
         <activity android:name=".LoginAdminActivity" />
         <activity android:name=".AddFAQActivity" />
         <activity

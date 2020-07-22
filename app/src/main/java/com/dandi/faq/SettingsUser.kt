@@ -14,6 +14,7 @@ import android.os.Environment
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.text.format.Time
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -43,8 +44,9 @@ class SettingsUser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_user)
-        RequestCamera.requestPermission(this)
         requestAppPermissions()
+        Toast.makeText(applicationContext,intent.getStringExtra("noTelp"),Toast.LENGTH_SHORT).show()
+        RequestCamera.requestPermission(this)
         btUploadFotoSetting.setOnClickListener {
             val appCompatDialog = AppCompatDialog(this)
             appCompatDialog.setContentView(R.layout.dialog_media)
@@ -132,7 +134,7 @@ class SettingsUser : AppCompatActivity() {
         return outputDir
     }
     private fun requestAppPermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return
         }
 
@@ -162,7 +164,6 @@ class SettingsUser : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_KAMERA && resultCode == Activity.RESULT_OK) {

@@ -114,8 +114,10 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
                 pushFirebase(it.result!!.user!!.uid)
                 SharedPrefUtil.saveBoolean("login", true)
                 SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
-                SharedPrefUtil.saveString("noTelp", intent.getStringExtra("noTelp")!!)
-                startActivity(Intent(this, SettingsUser::class.java))
+                SharedPrefUtil.saveString("noTelp", this.intent.getStringExtra("noTelp")!!)
+                val intent = Intent(this,SettingsUser::class.java)
+                intent.putExtra("noTelp",this.intent.getStringExtra("noTelp"))
+                startActivity(intent)
                 finish()
             } else {
                 Toast.makeText(applicationContext, "Kode Salah", Toast.LENGTH_SHORT).show()
