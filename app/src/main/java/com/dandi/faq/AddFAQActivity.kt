@@ -273,10 +273,14 @@ class AddFAQActivity : AppCompatActivity() {
                 db.setValue(postingan).addOnSuccessListener {
                     Toast.makeText(applicationContext, "Postingan Terkirim", Toast.LENGTH_SHORT)
                         .show()
+                    startActivity(Intent(this,MainActivity::class.java))
+                    finish()
                 }
                     .addOnFailureListener {
                         Toast.makeText(applicationContext, "Postingan Gagal", Toast.LENGTH_SHORT)
                             .show()
+                        startActivity(Intent(this,MainActivity::class.java))
+                        finish()
                     }
             }
         }

@@ -12,10 +12,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         btLogin.setOnClickListener {
-            SharedPrefUtil.saveBoolean("admin",false)
+            SharedPrefUtil.saveBoolean("admin", false)
             val intent = Intent(this, VerifikasiNoTelponActivity::class.java)
             intent.putExtra("noTelp", etNotelp.text.toString())
             startActivity(intent)
+            SharedPrefUtil.saveBoolean("login", true)
         }
         tvLoginAdmin.setOnClickListener {
             startActivity(Intent(this, LoginAdminActivity::class.java))

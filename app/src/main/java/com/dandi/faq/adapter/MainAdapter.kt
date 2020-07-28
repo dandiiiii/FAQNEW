@@ -4,18 +4,29 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dandi.faq.R
+import com.dandi.faq.model.Like
+import com.dandi.faq.model.User
 import com.example.faq.Postingan
+import com.example.faq.sharepreference.SharedPrefUtil
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.item_list_pertanyaan.view.*
 
-class MainAdapter(var listPostingan: List<Postingan>, var context: Context) :
+class MainAdapter(
+    var listKey: ArrayList<String>,
+    var listPostingan: List<Postingan>,
+    var context: Context
+) :
     RecyclerView.Adapter<MainAdapter.ViewHolder>() {
+    var listUser: ArrayList<User> = ArrayList()
+    var listlike :ArrayList<Like> = ArrayList()
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val fotoProfil: CircleImageView = itemView.imgFotoUser
         val nama = itemView.tvNamaUser
@@ -24,6 +35,8 @@ class MainAdapter(var listPostingan: List<Postingan>, var context: Context) :
         val btlike = itemView.imgLike
         val btcomment = itemView.imgComment
         val jmllike = itemView.tvJmlLike
+        val jenisPertanyaan = itemView.tvJenisPertanyaan
+        val tanggal = itemView.tvTanggal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,5 +53,50 @@ class MainAdapter(var listPostingan: List<Postingan>, var context: Context) :
         Glide.with(context).load(listPostingan.get(position).fotopostingan)
             .into(holder.fotopertanyaan)
         holder.pertanyaan.setText(listPostingan.get(position).pertanyaan)
+        FirebaseDatabase.getInstance().reference.child("User/${listPostingan.get(position)!!.idUser}")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "${error}", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    holder.nama.setText(user!!.nama)
+                    Glide.with(context).load(user!!.fotoProfil).into(holder.fotoProfil)
+                }
+
+            })
+        holder.jmllike.setText("0")
+        holder.jenisPertanyaan.setText(listPostingan.get(position).jenisPertanyaan)
+        holder.btlike.setOnClickListener {
+            val map = HashMap<String,Any> ()
+            map.put("isLike",true)
+            FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like/${SharedPrefUtil.getString("noTelp")}").updateChildren(map)
+        }
+        FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like").addValueEventListener(
+            object :ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+                    holder.jmllike.setText("0")
+                    Toast.makeText(context,"${error}",Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    listlike.clear()
+                    for (i in snapshot.children){
+                        val like = i.getValue(Like::class.java)
+                       if (like!=null){
+                           listlike.add(like!!)
+                           holder.jmllike.setText(listlike.size.toString())
+                       }
+                        else{
+                           holder.jmllike.setText("0")
+                       }
+
+                    }
+                }
+
+            }
+        )
+        //        hol
     }
 }
