@@ -14,7 +14,14 @@ class SplashActivity : AppCompatActivity() {
         Handler().postDelayed(object : Runnable {
             override fun run() {
                 if (SharedPrefUtil.getBoolean("login")) {
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    if (SharedPrefUtil.getBoolean("admin")){
+                        startActivity(Intent(this@SplashActivity, MainAdminActivity::class.java))
+                        finish()
+                    }
+                    else{
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    finish()
+                    }
                 } else {
                     startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
                 }

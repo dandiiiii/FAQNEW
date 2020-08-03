@@ -1,42 +1,47 @@
-package com.dandi.faq
+package com.dandi.faq.fragment
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anychart.scales.Linear
+import com.dandi.faq.R
 import com.dandi.faq.adapter.MainAdapter
 import com.dandi.faq.model.Like
 import com.example.faq.Postingan
-import com.example.faq.sharepreference.SharedPrefUtil
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_postingan.*
+import kotlinx.android.synthetic.main.fragment_postingan.view.*
 
-class MainActivity : AppCompatActivity() {
-    lateinit var db: DatabaseReference
+class PostinganFragment : Fragment() {
     var listPostingan: ArrayList<Postingan> = ArrayList()
     var listKey: ArrayList<String> = ArrayList()
     var listLike: ArrayList<Like> = ArrayList()
+    lateinit var mainAdapter:MainAdapter
     var listComment: ArrayList<String> = ArrayList()
-    lateinit var mainAdapter: MainAdapter
+    private lateinit var db: DatabaseReference
+    internal lateinit var view:View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        fabAddPertanyaan.setOnClickListener {
-            startActivity(Intent(this, AddFAQActivity::class.java))
-        }
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        view = inflater.inflate(R.layout.fragment_postingan, container, false)
         initFirebase()
+        return view
     }
 
     private fun initFirebase() {
         db = FirebaseDatabase.getInstance().reference.child("Postingan")
         db.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(applicationContext, "${error}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "${error}", Toast.LENGTH_SHORT).show()
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -56,32 +61,17 @@ class MainActivity : AppCompatActivity() {
                 }
                 Log.d("LIST KEY", listKey.get(1))
                 mainAdapter =
-                    MainAdapter(listKey, listPostingan, this@MainActivity)
-                val linearLayoutManager = LinearLayoutManager(this@MainActivity)
+                    MainAdapter(listKey, listPostingan, context!!)
+                val linearLayoutManager = LinearLayoutManager(context!!)
                 linearLayoutManager.reverseLayout = true
-                rvHome.layoutManager = linearLayoutManager
-                rvHome.setHasFixedSize(true)
-                rvHome.adapter = mainAdapter
+                view.rvPostinganAdmin.layoutManager = linearLayoutManager
+                view.rvPostinganAdmin.smoothScrollToPosition(listPostingan.size-1)
+                view.rvPostinganAdmin.setHasFixedSize(true)
+                view.rvPostinganAdmin.adapter = mainAdapter
                 mainAdapter.notifyDataSetChanged()
             }
 
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menuLogout) {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-            SharedPrefUtil.edit().clear().apply()
-        } else if (item.itemId == R.id.menuProfil) {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
-        return true
-    }
 }

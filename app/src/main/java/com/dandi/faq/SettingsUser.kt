@@ -70,6 +70,9 @@ class SettingsUser : AppCompatActivity() {
                 if (SharedPrefUtil.getBoolean("admin")) {
                     FirebaseDatabase.getInstance().reference.child("Admin/${intent.getStringExtra("noTelp")}")
                         .updateChildren(map)
+                    startActivity(Intent(this,MainAdminActivity::class.java))
+                    finish()
+                    SharedPrefUtil.saveString("namaAdmin",etNamaSetting.text.toString())
                 }
                 else{
                     FirebaseDatabase.getInstance().reference.child("User/${intent.getStringExtra("noTelp")}")

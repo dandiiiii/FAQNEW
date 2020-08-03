@@ -115,8 +115,8 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
                 SharedPrefUtil.saveBoolean("login", true)
                 SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
                 SharedPrefUtil.saveString("noTelp", this.intent.getStringExtra("noTelp")!!)
-                val intent = Intent(this,SettingsUser::class.java)
-                intent.putExtra("noTelp",this.intent.getStringExtra("noTelp"))
+                val intent = Intent(this, SettingsUser::class.java)
+                intent.putExtra("noTelp", this.intent.getStringExtra("noTelp"))
                 startActivity(intent)
                 finish()
             } else {
@@ -130,10 +130,19 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
         userFirebase.nama = "Dandi"
         userFirebase.noTelp = this.intent.getStringExtra("noTelp")!!
         userFirebase.uid = uid
-     if (!SharedPrefUtil.getBoolean("admin")){
-         FirebaseDatabase.getInstance().reference.child("User/${this.intent.getStringExtra("noTelp")}")
-             .setValue(userFirebase)
-     }
+        if (!SharedPrefUtil.getBoolean("admin")) {
+            FirebaseDatabase.getInstance().reference.child("User/${this.intent.getStringExtra("noTelp")}")
+                .setValue(userFirebase)
+        } else {
+            FirebaseDatabase.getInstance().reference.child(
+                "Admin/${this.intent.getStringExtra(
+                    "${intent.getStringExtra(
+                        "userName"
+                    )}"
+                )}"
+            )
+                .setValue(userFirebase)
+        }
     }
 
     fun pushToken() {

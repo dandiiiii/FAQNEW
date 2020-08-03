@@ -35,32 +35,33 @@ class LoginAdminActivity : AppCompatActivity() {
 
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (snapshot.exists()) {
-                                    val admin = snapshot.getValue(Admin::class.java)
-                                Log.d("ADMIN PASSWORD",admin!!.password.toString())
-                                    if (etPassword.text.toString().equals(admin.password)) {
-                                        val intent = Intent(
-                                            Intent(
-                                                this@LoginAdminActivity,
-                                                VerifikasiNoTelponActivity::class.java
-                                            )
+                                val admin = snapshot.getValue(Admin::class.java)
+                                Log.d("ADMIN PASSWORD", admin!!.password.toString())
+                                if (etPassword.text.toString().equals(admin.password)) {
+                                    val intent = Intent(
+                                        Intent(
+                                            this@LoginAdminActivity,
+                                            VerifikasiNoTelponActivity::class.java
                                         )
-                                        SharedPrefUtil.saveBoolean("admin",true)
-                                        intent.putExtra("noTelp", admin!!.noTelp)
-                                        startActivity(intent)
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Berhasil Login",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Password Salah",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                    )
+                                    SharedPrefUtil.saveBoolean("admin", true)
+                                    intent.putExtra("noTelp", admin!!.noTelp)
+                                    intent.putExtra("userName", snapshot.key)
+                                    startActivity(intent)
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Berhasil Login",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Password Salah",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
-                                    }
                                 }
+                            }
                         }
 
                     })

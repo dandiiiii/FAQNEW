@@ -26,7 +26,8 @@ class MainAdapter(
 ) :
     RecyclerView.Adapter<MainAdapter.ViewHolder>() {
     var listUser: ArrayList<User> = ArrayList()
-    var listlike :ArrayList<Like> = ArrayList()
+    var listlike: ArrayList<Like> = ArrayList()
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val fotoProfil: CircleImageView = itemView.imgFotoUser
         val nama = itemView.tvNamaUser
@@ -37,6 +38,10 @@ class MainAdapter(
         val jmllike = itemView.tvJmlLike
         val jenisPertanyaan = itemView.tvJenisPertanyaan
         val tanggal = itemView.tvTanggal
+        val komentar = itemView.tvKomentar
+        val layoutComment = itemView.layoutKomentar
+        val etKomentar = itemView.etComment
+        val btBalasComment = itemView.btComment
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -69,34 +74,54 @@ class MainAdapter(
         holder.jmllike.setText("0")
         holder.jenisPertanyaan.setText(listPostingan.get(position).jenisPertanyaan)
         holder.btlike.setOnClickListener {
-            val map = HashMap<String,Any> ()
-            map.put("isLike",true)
-            FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like/${SharedPrefUtil.getString("noTelp")}").updateChildren(map)
+            val map = HashMap<String, Any>()
+            map.put("isLike", true)
+            FirebaseDatabase.getInstance().reference.child(
+                "Postingan/${listKey.get(position)}/like/${SharedPrefUtil.getString(
+                    "noTelp"
+                )}"
+            ).updateChildren(map)
         }
-        FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like").addValueEventListener(
-            object :ValueEventListener{
-                override fun onCancelled(error: DatabaseError) {
-                    holder.jmllike.setText("0")
-                    Toast.makeText(context,"${error}",Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    listlike.clear()
-                    for (i in snapshot.children){
-                        val like = i.getValue(Like::class.java)
-                       if (like!=null){
-                           listlike.add(like!!)
-                           holder.jmllike.setText(listlike.size.toString())
-                       }
-                        else{
-                           holder.jmllike.setText("0")
-                       }
-
+        holder.komentar.setText(listPostingan.get(position).commentAdmin)
+        FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like")
+            .addValueEventListener(
+                object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        holder.jmllike.setText("0")
+                        Toast.makeText(context, "${error}", Toast.LENGTH_SHORT).show()
                     }
-                }
 
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        listlike.clear()
+                        for (i in snapshot.children) {
+                            val like = i.getValue(Like::class.java)
+                            if (like != null) {
+                                listlike.add(like!!)
+                                holder.jmllike.setText(listlike.size.toString())
+                            } else {
+                                holder.jmllike.setText("0")
+                            }
+
+                        }
+                    }
+
+                }
+            )
+
+        holder.btcomment.setOnClickListener {
+        if (SharedPrefUtil.getBoolean("admin")){
+            holder.layoutComment.visibility = View.VISIBLE
+            holder.btBalasComment.setOnClickListener {
+                if (!holder.etKomentar.text.isEmpty()) {
+                    val map = HashMap<String, Any>()
+                    map.put("commentAdmin", "${SharedPrefUtil.getString("namaAdmin")} (Admin) : ${holder.etKomentar.text.toString()}")
+                    FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}")
+                        .updateChildren(map)
+                    holder.layoutComment.visibility = View.GONE
+                }
             }
-        )
+        }
+        }
         //        hol
     }
 }
