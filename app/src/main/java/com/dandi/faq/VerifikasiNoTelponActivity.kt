@@ -112,6 +112,9 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 getToken()
                 pushFirebase(it.result!!.user!!.uid)
+                SharedPrefUtil.saveString("userName","${intent.getStringExtra(
+                    "userName"
+                )}")
                 SharedPrefUtil.saveBoolean("login", true)
                 SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
                 SharedPrefUtil.saveString("noTelp", this.intent.getStringExtra("noTelp")!!)

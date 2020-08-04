@@ -22,9 +22,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.dandi.faq.model.User
 import com.example.faq.sharepreference.SharedPrefUtil
 import com.firebase.client.Firebase
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -36,19 +38,28 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 
 class SettingsUser : AppCompatActivity() {
-    private val REQUEST_WRITE_STORAGE_REQUEST_CODE: Int=3
+    private val REQUEST_WRITE_STORAGE_REQUEST_CODE: Int = 3
     var bitmapFinal: Bitmap? = null
     var mHighQualityImageUri: Uri? = null
     val REQUEST_KAMERA = 1
     val REQUEST_GALLERY = 2
+    lateinit var appCompatDialog: AppCompatDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_user)
+        initProfile(
+            if (SharedPrefUtil.getBoolean("admin")) {
+                intent.getStringExtra("userName")
+            } else {
+                intent.getStringExtra("noTelp")
+            }
+        )
         requestAppPermissions()
-        Toast.makeText(applicationContext,intent.getStringExtra("noTelp"),Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, intent.getStringExtra("noTelp"), Toast.LENGTH_SHORT)
+            .show()
         RequestCamera.requestPermission(this)
         btUploadFotoSetting.setOnClickListener {
-            val appCompatDialog = AppCompatDialog(this)
+            appCompatDialog = AppCompatDialog(this)
             appCompatDialog.setContentView(R.layout.dialog_media)
             appCompatDialog.layoutKamera.setOnClickListener {
                 intentKamera()
@@ -68,21 +79,43 @@ class SettingsUser : AppCompatActivity() {
                 val map = HashMap<String, Any>()
                 map.put("nama", etNamaSetting.text.toString())
                 if (SharedPrefUtil.getBoolean("admin")) {
-                    FirebaseDatabase.getInstance().reference.child("Admin/${intent.getStringExtra("noTelp")}")
+                    FirebaseDatabase.getInstance().reference.child("Admin/${intent.getStringExtra("userName")}")
                         .updateChildren(map)
-                    startActivity(Intent(this,MainAdminActivity::class.java))
+                    startActivity(Intent(this, MainAdminActivity::class.java))
                     finish()
-                    SharedPrefUtil.saveString("namaAdmin",etNamaSetting.text.toString())
-                }
-                else{
+                    SharedPrefUtil.saveString("namaAdmin", etNamaSetting.text.toString())
+                } else {
                     FirebaseDatabase.getInstance().reference.child("User/${intent.getStringExtra("noTelp")}")
                         .updateChildren(map)
-                    startActivity(Intent(this,MainActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
             }
         }
 
+    }
+
+    private fun initProfile(s: String?) {
+        var db: DatabaseReference
+        if (SharedPrefUtil.getBoolean("admin")) {
+            db = FirebaseDatabase.getInstance().reference.child("Admin/$s")
+        } else {
+            db = FirebaseDatabase.getInstance().reference.child("User/$s")
+        }
+        db.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "$error", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    val user = snapshot.getValue(User::class.java)
+                    Glide.with(applicationContext).load(user!!.fotoProfil).into(fotoPPUser)
+                    etNamaSetting.setText(user.nama)
+                }
+            }
+
+        })
     }
 
     internal fun intentKamera() {
@@ -136,6 +169,7 @@ class SettingsUser : AppCompatActivity() {
         }
         return outputDir
     }
+
     private fun requestAppPermissions() {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return
@@ -167,6 +201,7 @@ class SettingsUser : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_KAMERA && resultCode == Activity.RESULT_OK) {
@@ -181,7 +216,7 @@ class SettingsUser : AppCompatActivity() {
                 )
                 bitmapFinal = rotateBitmap
 //                uploadFoto(bitmapFinal!!)
-
+                appCompatDialog.dismiss()
                 fotoPPUser.setImageBitmap(bitmapFinal)
 
             } catch (e: FileNotFoundException) {
@@ -200,6 +235,7 @@ class SettingsUser : AppCompatActivity() {
                 )
                 bitmapFinal = rotateBitmap
 //                uploadFoto(bitmapFinal!!)
+                appCompatDialog.dismiss()
                 fotoPPUser.setImageBitmap(bitmapFinal)
 
             } catch (e: FileNotFoundException) {

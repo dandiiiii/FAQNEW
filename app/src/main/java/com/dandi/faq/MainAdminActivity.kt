@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SharedMemory
 import androidx.fragment.app.Fragment
+import com.dandi.faq.fragment.DiagramFragment
 import com.dandi.faq.fragment.PostinganFragment
 import com.dandi.faq.fragment.ProfileFragment
 import com.example.faq.sharepreference.SharedPrefUtil
@@ -29,6 +30,9 @@ class MainAdminActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
                 FirebaseAuth.getInstance().signOut()
+                return@setOnNavigationItemSelectedListener true
+            } else if (it.itemId == R.id.menuChartAdmin) {
+                gotoFragment(DiagramFragment())
                 return@setOnNavigationItemSelectedListener true
             }
             return@setOnNavigationItemSelectedListener false
