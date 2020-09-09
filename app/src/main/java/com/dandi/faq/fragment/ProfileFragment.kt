@@ -19,10 +19,6 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 
 class ProfileFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     internal lateinit var view: View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

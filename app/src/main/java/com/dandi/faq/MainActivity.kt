@@ -3,13 +3,11 @@ package com.dandi.faq
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anychart.scales.Linear
-import com.dandi.faq.adapter.MainAdapter
+import com.dandi.faq.adapter.PostinganAdapter
 import com.dandi.faq.model.Like
 import com.example.faq.Postingan
 import com.example.faq.sharepreference.SharedPrefUtil
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     var listKey: ArrayList<String> = ArrayList()
     var listLike: ArrayList<Like> = ArrayList()
     var listComment: ArrayList<String> = ArrayList()
-    lateinit var mainAdapter: MainAdapter
+    lateinit var postinganAdapter: PostinganAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,15 +52,15 @@ class MainActivity : AppCompatActivity() {
                     val postingan = i.getValue(Postingan::class.java)
                     listPostingan.add(postingan!!)
                 }
-                Log.d("LIST KEY", listKey.get(1))
-                mainAdapter =
-                    MainAdapter(listKey, listPostingan, this@MainActivity)
+                postinganAdapter =
+                    PostinganAdapter(listKey, listPostingan, this@MainActivity)
                 val linearLayoutManager = LinearLayoutManager(this@MainActivity)
                 linearLayoutManager.reverseLayout = true
+                linearLayoutManager.stackFromEnd = true
                 rvHome.layoutManager = linearLayoutManager
                 rvHome.setHasFixedSize(true)
-                rvHome.adapter = mainAdapter
-                mainAdapter.notifyDataSetChanged()
+                rvHome.adapter = postinganAdapter
+                postinganAdapter.notifyDataSetChanged()
             }
 
         })
@@ -70,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-
         return true
     }
 

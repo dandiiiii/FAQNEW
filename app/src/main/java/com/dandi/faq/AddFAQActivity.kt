@@ -35,6 +35,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddFAQActivity : AppCompatActivity() {
     private var bitmapFinal: Bitmap? = null
@@ -68,26 +70,33 @@ class AddFAQActivity : AppCompatActivity() {
                 db = FirebaseDatabase.getInstance().reference.child(
                     "Postingan/${System.currentTimeMillis()}"
                 )
-               if (bitmapFinal!=null){
-                   uploadFoto(bitmapFinal,db)
-               }
-                else{
-                   val postingan = Postingan(
-                       SharedPrefUtil.getString("noTelp")!!,
-                       etPertanyaan.text.toString(),
-                       jenisPertanyaan,
-                       "",
-                       ""
-                   )
-                   db.setValue(postingan).addOnSuccessListener {
-                       Toast.makeText(applicationContext, "Postingan Terkirim", Toast.LENGTH_SHORT)
-                           .show()
-                   }
-                       .addOnFailureListener {
-                           Toast.makeText(applicationContext, "Postingan Gagal", Toast.LENGTH_SHORT)
-                               .show()
-                       }
-               }
+                if (bitmapFinal != null) {
+                    uploadFoto(bitmapFinal, db)
+                } else {
+                    val locale = Locale("in", "ID")
+                    val simpleFormatDate = SimpleDateFormat("dd-MM-yyyy HH:mm", locale)
+                    val tanggal = simpleFormatDate.format(Calendar.getInstance().time)
+                    val postingan = Postingan(
+                        SharedPrefUtil.getString("noTelp")!!,
+                        etPertanyaan.text.toString(),
+                        jenisPertanyaan,
+                        "",
+                        "",
+                        tanggal
+                    )
+                    db.setValue(postingan).addOnSuccessListener {
+                        Toast.makeText(applicationContext, "Postingan Terkirim", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                        .addOnFailureListener {
+                            Toast.makeText(
+                                applicationContext,
+                                "Postingan Gagal",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                }
 
             }
         }
@@ -216,7 +225,13 @@ class AddFAQActivity : AppCompatActivity() {
                         ImageRotator.rotateImageIfRequired(bitmap, applicationContext, uri)
                     bitmapFinal = rotateBitmap
                     imguploadpreview.setImageBitmap(bitmapFinal)
-                    Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
+                    imguploadpreview.visibility = View.VISIBLE
+                    btCancelImage.visibility = View.VISIBLE
+                    btCancelImage.setOnClickListener {
+                        imguploadpreview.visibility = View.GONE
+                        btCamera.visibility = View.VISIBLE
+                        btCancelImage.visibility = View.GONE
+                    }
 
                 } catch (e: Exception) {
                     Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_LONG).show()
@@ -238,7 +253,13 @@ class AddFAQActivity : AppCompatActivity() {
                 )
                 bitmapFinal = rotateBitmap
                 imguploadpreview.setImageBitmap(bitmapFinal)
-                Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT).show()
+                imguploadpreview.visibility = View.VISIBLE
+                btCancelImage.visibility = View.VISIBLE
+                btCancelImage.setOnClickListener {
+                    imguploadpreview.visibility = View.GONE
+                    btCamera.visibility = View.VISIBLE
+                    btCancelImage.visibility = View.GONE
+                }
 
             } catch (e: FileNotFoundException) {
                 Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_LONG).show()
@@ -263,23 +284,27 @@ class AddFAQActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_SHORT).show()
         }.addOnSuccessListener {
             imageRef.downloadUrl.addOnSuccessListener {
+                val locale = Locale("in", "ID")
+                val simpleFormatDate = SimpleDateFormat("dd-MM-yyyy HH:mm", locale)
+                val tanggal = simpleFormatDate.format(Calendar.getInstance().time)
                 val postingan = Postingan(
                     SharedPrefUtil.getString("noTelp")!!,
                     etPertanyaan.text.toString(),
                     jenisPertanyaan,
                     "",
-                    it.toString()
+                    it.toString(),
+                    tanggal
                 )
                 db.setValue(postingan).addOnSuccessListener {
                     Toast.makeText(applicationContext, "Postingan Terkirim", Toast.LENGTH_SHORT)
                         .show()
-                    startActivity(Intent(this,MainActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
                     .addOnFailureListener {
                         Toast.makeText(applicationContext, "Postingan Gagal", Toast.LENGTH_SHORT)
                             .show()
-                        startActivity(Intent(this,MainActivity::class.java))
+                        startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
             }

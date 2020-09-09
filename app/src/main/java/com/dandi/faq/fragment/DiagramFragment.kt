@@ -23,9 +23,6 @@ class DiagramFragment : Fragment() {
     var listSeminar: ArrayList<Postingan> = ArrayList()
     var listPembayaran: ArrayList<Postingan> = ArrayList()
     var listLainnya: ArrayList<Postingan> = ArrayList()
-    var seminar: Int = 0
-    var pembayaran: Int = 0
-    var lainnya: Int = 0
     internal lateinit var view: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +38,7 @@ class DiagramFragment : Fragment() {
         return view
     }
 
-    fun initFirebase() {
+   private fun initFirebase() {
         db = FirebaseDatabase.getInstance().reference.child("Postingan")
         db.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {

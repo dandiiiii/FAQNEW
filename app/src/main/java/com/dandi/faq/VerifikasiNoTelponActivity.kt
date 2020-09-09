@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.dandi.faq.LoginActivity
 import com.dandi.faq.MainActivity
 import com.dandi.faq.R
+import com.dandi.faq.model.User
 import com.example.faq.sharepreference.SharedPrefUtil
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.TaskExecutors
@@ -112,9 +113,11 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 getToken()
                 pushFirebase(it.result!!.user!!.uid)
-                SharedPrefUtil.saveString("userName","${intent.getStringExtra(
-                    "userName"
-                )}")
+                SharedPrefUtil.saveString(
+                    "userName", "${intent.getStringExtra(
+                        "userName"
+                    )}"
+                )
                 SharedPrefUtil.saveBoolean("login", true)
                 SharedPrefUtil.saveString("id", it.result!!.user!!.uid)
                 SharedPrefUtil.saveString("noTelp", this.intent.getStringExtra("noTelp")!!)
@@ -129,22 +132,17 @@ class VerifikasiNoTelponActivity : AppCompatActivity() {
     }
 
     private fun pushFirebase(uid: String) {
-        val userFirebase = UserFirebase()
-        userFirebase.nama = "Dandi"
-        userFirebase.noTelp = this.intent.getStringExtra("noTelp")!!
-        userFirebase.uid = uid
+        val map = HashMap<String, Any>()
+        map.put("noTelp", this.intent.getStringExtra("noTelp")!!)
+        map.put("uid", uid)
         if (!SharedPrefUtil.getBoolean("admin")) {
             FirebaseDatabase.getInstance().reference.child("User/${this.intent.getStringExtra("noTelp")}")
-                .setValue(userFirebase)
+                .updateChildren(map)
         } else {
             FirebaseDatabase.getInstance().reference.child(
-                "Admin/${this.intent.getStringExtra(
-                    "${intent.getStringExtra(
-                        "userName"
-                    )}"
-                )}"
+                "Admin/${intent.getStringExtra("userName")}"
             )
-                .setValue(userFirebase)
+                .updateChildren(map)
         }
     }
 

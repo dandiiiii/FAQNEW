@@ -5,8 +5,9 @@ package com.example.faq
     var pertanyaan: String,
     var jenisPertanyaan:String,
     var commentAdmin: String,
-    var fotopostingan: String
+    var fotopostingan: String,
+    var tanggal:String
 )
  {
-     constructor():this("","","","","")
+     constructor():this("","","","","","")
  }

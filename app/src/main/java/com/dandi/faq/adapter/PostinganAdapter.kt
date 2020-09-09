@@ -19,13 +19,12 @@ import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.item_list_pertanyaan.view.*
 
-class MainAdapter(
+class PostinganAdapter(
     var listKey: ArrayList<String>,
     var listPostingan: List<Postingan>,
     var context: Context
 ) :
-    RecyclerView.Adapter<MainAdapter.ViewHolder>() {
-    var listUser: ArrayList<User> = ArrayList()
+    RecyclerView.Adapter<PostinganAdapter.ViewHolder>() {
     var listlike: ArrayList<Like> = ArrayList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -55,8 +54,14 @@ class MainAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(context).load(listPostingan.get(position).fotopostingan)
-            .into(holder.fotopertanyaan)
+        if (listPostingan.get(position).fotopostingan.isEmpty() || listPostingan.get(position).fotopostingan == null) {
+            holder.fotopertanyaan.visibility = View.GONE
+        } else {
+            Glide.with(context).load(listPostingan.get(position).fotopostingan)
+                .into(holder.fotopertanyaan)
+            holder.fotopertanyaan.visibility = View.VISIBLE
+        }
+
         holder.pertanyaan.setText(listPostingan.get(position).pertanyaan)
         FirebaseDatabase.getInstance().reference.child("User/${listPostingan.get(position)!!.idUser}")
             .addValueEventListener(object : ValueEventListener {
@@ -67,7 +72,7 @@ class MainAdapter(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)
                     holder.nama.setText(user!!.nama)
-                    Glide.with(context).load(user!!.fotoProfil).into(holder.fotoProfil)
+                    Glide.with(context.applicationContext).load(user!!.fotoProfil).into(holder.fotoProfil)
                 }
 
             })
@@ -82,7 +87,13 @@ class MainAdapter(
                 )}"
             ).updateChildren(map)
         }
-        holder.komentar.setText(listPostingan.get(position).commentAdmin)
+        if (listPostingan.get(position).commentAdmin.isEmpty()){
+            holder.komentar.setText("Belum dibalas Admin")
+        }
+        else{
+            holder.komentar.setText("Dibalas oleh ${listPostingan.get(position).commentAdmin}")
+        }
+        holder.tanggal.setText(listPostingan.get(position).tanggal)
         FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}/like")
             .addValueEventListener(
                 object : ValueEventListener {
@@ -109,18 +120,25 @@ class MainAdapter(
             )
 
         holder.btcomment.setOnClickListener {
-        if (SharedPrefUtil.getBoolean("admin")){
-            holder.layoutComment.visibility = View.VISIBLE
-            holder.btBalasComment.setOnClickListener {
-                if (!holder.etKomentar.text.isEmpty()) {
-                    val map = HashMap<String, Any>()
-                    map.put("commentAdmin", "${SharedPrefUtil.getString("namaAdmin")} (Admin) : ${holder.etKomentar.text.toString()}")
-                    FirebaseDatabase.getInstance().reference.child("Postingan/${listKey.get(position)}")
-                        .updateChildren(map)
-                    holder.layoutComment.visibility = View.GONE
+            if (SharedPrefUtil.getBoolean("admin")) {
+                holder.layoutComment.visibility = View.VISIBLE
+                holder.btBalasComment.setOnClickListener {
+                    if (!holder.etKomentar.text.isEmpty()) {
+                        val map = HashMap<String, Any>()
+                        map.put(
+                            "commentAdmin",
+                            "${SharedPrefUtil.getString("namaAdmin")} (Admin) : ${holder.etKomentar.text.toString()}"
+                        )
+                        FirebaseDatabase.getInstance().reference.child(
+                            "Postingan/${listKey.get(
+                                position
+                            )}"
+                        )
+                            .updateChildren(map)
+                        holder.layoutComment.visibility = View.GONE
+                    }
                 }
             }
-        }
         }
         //        hol
     }

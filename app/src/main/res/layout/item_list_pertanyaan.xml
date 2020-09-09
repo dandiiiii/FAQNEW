@@ -20,14 +20,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="3dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvNamaUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="1dp"
                 android:text="Muhammad Yonnas H"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -37,13 +37,13 @@
                 android:id="@+id/tvTanggal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp" />
+                android:layout_margin="2dp" />
 
             <TextView
                 android:id="@+id/tvJenisPertanyaan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp" />
+                android:layout_margin="1dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -124,4 +124,8 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_baseline_send_24" />
     </LinearLayout>
+    <View
+        android:background="@color/abu"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 </LinearLayout>

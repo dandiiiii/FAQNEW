@@ -39,6 +39,16 @@
                 android:hint="Nama"
                 android:inputType="text" />
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNoTelpAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                android:drawableLeft="@drawable/ic_baseline_account_circle_24"
+                android:hint="Nomor Telepon"
+                android:inputType="text" />
+
             <Button
                 android:id="@+id/btDoneSetting"
                 android:layout_width="match_parent"
@@ -48,12 +58,13 @@
                 android:textColor="@color/putih" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btUploadFotoSetting"
-        android:src="@drawable/ic_baseline_camera_alt_24"
-        android:layout_above="@id/cardForm"
-        android:layout_toRightOf="@id/fotoPPUser"
-        android:layout_marginLeft="-50dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cardForm"
+        android:layout_marginLeft="-50dp"
+        android:layout_toRightOf="@id/fotoPPUser"
+        android:src="@drawable/ic_baseline_camera_alt_24" />
 </RelativeLayout>

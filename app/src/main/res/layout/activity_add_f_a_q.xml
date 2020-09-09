@@ -15,7 +15,6 @@
         android:layout_margin="10dp"
         android:text="Jenis Pertanyaan"
         android:textSize="24sp" />
-
     <Spinner
         android:id="@+id/spPertanyaan"
         android:layout_width="200dp"
@@ -26,36 +25,44 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_margin="10dp">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPertanyaan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
             android:hint="Ketikan sesuatu disini" />
-
-
     </com.google.android.material.textfield.TextInputLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:layout_margin="10dp"
+        android:background="@drawable/bt_abu2"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="100dp">
         <ImageButton
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_baseline_close_24"
+            android:id="@+id/btCancelImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:layout_centerInParent="true"
             android:id="@+id/btCamera"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_baseline_camera_alt_24" />
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
+            android:visibility="gone"
             android:id="@+id/imguploadpreview"
-            android:layout_margin="10dp"
             android:src="@drawable/art"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
     <Button
         android:id="@+id/btSubmit"
         android:layout_width="match_parent"
